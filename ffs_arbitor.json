@@ -1,0 +1,17 @@
+{ signal: [
+    { name: "clk", wave: 'P........' },
+    { name: "req", wave: '=.===', data: [ '0xB', '0x3', '0x1', '0x0' ] },
+    { name: "gnt", wave: '=====', data:['0', '0x8', '0x2', '0x1', '0x0']},
+    {},
+    { name: 'req3', wave: '1.0..'},
+    { name: 'gnt3', wave: '010..'},
+    { name: 'req2', wave: '0....'},
+    { name: 'gnt2', wave: '0....'},
+    { name: 'req1', wave: '1..0.'},
+    { name: 'gnt1', wave: '0.10.'},
+    { name: 'req0', wave: '1...0'},
+    { name: 'gnt0', wave: '0..10'}
+],
+  config: { hscale: 4 },
+  head: { text: 'Find-First-Set Arbiter' }
+}
