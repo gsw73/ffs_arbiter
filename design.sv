@@ -59,33 +59,19 @@ begin
         winner = 16'd0;
         win_vld = 1'b0;
     end
+end
 
 // Register:  mask
 //
 // The mask depends on the previous winner.
-
-genvar i;
-
+  
 always @( posedge clk )
 
     if ( !rst_n )
         mask <= {CLIENTS{1'b0}};
 
     else
-    begin
-
-        case( winner )
-
-            generate
-                for ( i = 0; i < CLIENTS - 1; i++ )
-                    case i:  mask <= {i{1'b1}};
-            endgenerate
-
-            default:  mask <= {CLIENTS{1'b0}};
-
-        endcase
-
-    end
+        mask <= ( {{(CLIENTS - 1){1'b0}}, 1'b1 } << winner ) - 1'b1;
             
 // Register:  gnt
 //
@@ -115,9 +101,9 @@ always @( posedge clk )
 // Returns the first set bit starting with the most-significant bit.
 // Format for return is { vld, location[ 15:0 ] }
 
-function automatic [ 16:0 ] ffs( input bit [ CLIENTS - 1:0 ] vector )
+function automatic logic [ 16:0 ] ffs( input logic [ CLIENTS - 1:0 ] vector );
 
-    bit vld;
+    logic vld;
     logic [ 15:0 ] location;
 
     vld = 1'b0;
@@ -132,3 +118,5 @@ function automatic [ 16:0 ] ffs( input bit [ CLIENTS - 1:0 ] vector )
     return( { vld, location } );
 
 endfunction
+  
+endmodule

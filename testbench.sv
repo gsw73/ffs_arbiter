@@ -18,7 +18,7 @@ interface ffs_arbiter_if
     logic [ CLIENTS - 1:0 ] req = {CLIENTS{1'b0}};
     logic [ CLIENTS - 1:0 ] gnt;
 
-    clocking cb @( posedge clk )
+    clocking cb @( posedge clk );
         default output #1;
 
         output rst_n;
@@ -33,9 +33,9 @@ endinterface : ffs_arbiter_if
 
 module tb;
 
-parameter NUM_REQ = 20;
+parameter NUM_REQ = 8;
 
-logic clk
+logic clk;
 
 // instantiate the interface
 ffs_arbiter_if
@@ -82,7 +82,7 @@ endmodule
 
 program automatic main_prg #( parameter CLIENTS = 64 )( ffs_arbiter_if i_f );
 
-MyEnv#( .CLIENTS( CLIENTS ) env;
+MyEnv#(.CLIENTS(CLIENTS)) env;
 virtual ffs_arbiter_if#(CLIENTS).TB sig_h = i_f.TB;
 
 initial
