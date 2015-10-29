@@ -14,12 +14,14 @@ module ffs_arbiter
 // Declarations & Parameters
 
 logic [ CLIENTS - 1:0 ] mask;
+logic [ CLIENTS - 1:0 ] win_mask_only;
 logic [ 15:0 ] req_location;
 logic [ 15:0 ] reqm_location;
 logic vld_ffs_req;
 logic vld_ffs_reqm;
 
 logic [ CLIENTS - 1:0 ] req_masked;
+logic [ CLIENTS - 1:0 ] req_win_mask;
 
 logic [ 15:0 ] winner;
 logic win_vld;
@@ -28,12 +30,13 @@ logic win_vld;
 // Logic
 
 assign req_masked = req & mask;
+assign req_win_mask = req & win_mask_only;
 
 // find first set bit in both request and masked request; priority shifts
 // down the bit vector, but returns to the to of the bit vector when no
 // lower bits are set
 
-assign { vld_ffs_req, req_location } = ffs( req );
+assign { vld_ffs_req, req_location } = ffs( req_win_mask );
 assign { vld_ffs_reqm, reqm_location } = ffs( req_masked );
 
 // determine the winner--either the masked version (because a lower-priority
@@ -60,6 +63,23 @@ begin
         win_vld = 1'b0;
     end
 end
+  
+// Register:  win_mask_only
+//
+// When considering the upper part of the vector for the start-over
+// case, we still need to mask off the bit that just won so we don't
+// grant to it twice in a row.
+  
+always @( posedge clk )
+  
+    if ( !rst_n )
+        win_mask_only <= {CLIENTS{1'b0}};
+  
+    else if ( win_vld )
+        win_mask_only <= ~({{(CLIENTS - 1){1'b0}}, 1'b1 } << winner);
+  
+    else
+        win_mask_only <= {CLIENTS{1'b1}};
 
 // Register:  mask
 //
@@ -107,8 +127,9 @@ function automatic logic [ 16:0 ] ffs( input logic [ CLIENTS - 1:0 ] vector );
     logic [ 15:0 ] location;
 
     vld = 1'b0;
+    location = 16'hffff;
 
-    for ( int i = 0; i < CLIENTS - 1; i++ )
+    for ( int i = 0; i < CLIENTS; i++ )
         if ( vector[ i ] == 1'b1 )
         begin
             vld = 1'b1;

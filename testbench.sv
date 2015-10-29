@@ -19,7 +19,7 @@ interface ffs_arbiter_if
     logic [ CLIENTS - 1:0 ] gnt;
 
     clocking cb @( posedge clk );
-        default output #1;
+        default output #0.1;
 
         output rst_n;
         output req;
@@ -33,7 +33,7 @@ endinterface : ffs_arbiter_if
 
 module tb;
 
-parameter NUM_REQ = 8;
+parameter NUM_REQ = 128;
 
 logic clk;
 
@@ -71,6 +71,7 @@ ffs_arbiter
 )
 u_ffs_arbiter
 (
+    .clk( clk ),
     .rst_n( u_ffs_arbiter_if.rst_n ),
     .req( u_ffs_arbiter_if.req ),
     .gnt( u_ffs_arbiter_if.gnt )
@@ -88,7 +89,7 @@ virtual ffs_arbiter_if#(CLIENTS).TB sig_h = i_f.TB;
 initial
 begin
     env = new( sig_h );
-
+  
     sig_h.cb.rst_n <= 1'b0;
     #50 sig_h.cb.rst_n <= 1'b1;
 
@@ -96,7 +97,8 @@ begin
 
     env.run();
 
-    repeat( 2000 ) @( sig_h.cb );
+    repeat( 300 ) @( sig_h.cb );
+    $finish;
 end
 
 endprogram
