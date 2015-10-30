@@ -1,3 +1,5 @@
+import helpers::*;
+
 class Vector#( parameter WIDTH = 32 );
   
     rand bit [ WIDTH - 1:0 ] vect;

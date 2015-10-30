@@ -1,7 +1,16 @@
-`define MIN(A, B) ((A) < (B) ? (A) : (B))
+package helpers;
+
+function automatic logic MIN( input logic A, input logic B );
+  if ( A < B )
+      return( A );
+  else
+      return( B );
+endfunction
 
 typedef bit [ 31:0 ] uint32_t;
 typedef enum { FAIL, PASS } pf_e;
+
+endpackage
 
 `include "my_classes.sv"
 
@@ -32,6 +41,8 @@ endinterface : ffs_arbiter_if
 // ========================================================================
 
 module tb;
+  
+import helpers::*;
 
 parameter NUM_REQ = 128;
 
