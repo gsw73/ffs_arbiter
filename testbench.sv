@@ -1,10 +1,10 @@
 package helpers;
 
 function automatic logic MIN( input logic A, input logic B );
-  if ( A < B )
-      return( A );
-  else
-      return( B );
+    if ( A < B )
+        return( A );
+    else
+        return( B );
 endfunction
 
 typedef bit [ 31:0 ] uint32_t;

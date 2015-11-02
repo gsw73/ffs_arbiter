@@ -92,7 +92,7 @@ always @( posedge clk )
 
     else
         mask <= ( {{(CLIENTS - 1){1'b0}}, 1'b1 } << winner ) - 1'b1;
-            
+
 // Register:  gnt
 //
 // Priority is given to lower bits i.e., those getting a gnt when using
