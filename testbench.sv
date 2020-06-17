@@ -58,7 +58,7 @@ endmodule : tb
 // ========================================================================
 
 program automatic main_prg
-    import ffs_a_pkg;
+    import ffs_a_pkg::*;
     #(parameter CLIENTS=64)(ffs_arbiter_if sig_h);
 
     MyEnv#(.CLIENTS(CLIENTS)) env;
